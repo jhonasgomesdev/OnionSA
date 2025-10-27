@@ -75,7 +75,7 @@ namespace Server.API.Controllers
             _logger.LogInformation("Gerando lista de vendas.");
             try
             {
-                var orderList = _saleOrderService.GetSaleOrder();
+                var orderList = await _saleOrderService.GetSaleOrder();
                 return Ok(orderList);
             }
             catch (Exception ex)

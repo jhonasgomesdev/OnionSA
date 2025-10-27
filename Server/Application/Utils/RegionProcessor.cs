@@ -4,17 +4,37 @@ namespace Server.Application.Utils
 {
     public class RegionProcessor
     {
-        public static string GetRegionByState(Address address)
+        public static decimal GetDeliveryCost(string region, string locality)
         {
-            return address.UF.ToUpper() switch
+            if (locality == "São Paulo" && region == "Sudeste")
             {
-                "AC" or "AP" or "AM" or "PA" or "RO" or "RR" or "TO" => "Norte",
-                "AL" or "BA" or "CE" or "MA" or "PB" or "PE" or "PI" or "RN" or "SE" => "Nordeste",
-                "DF" or "GO" or "MT" or "MS" => "Centro-Oeste",
-                "ES" or "MG" or "RJ" or "SP" => "Sudeste",
-                "PR" or "RS" or "SC" => "Sul",
-                _ => throw new ArgumentException("Estado inválido.")
+                return 0m;
+            }
+
+            return region switch
+            {
+                "Norte" or "Nordeste" => 0.30m,
+                "Centro-Oeste" or "Sul" => 0.20m,
+                "Sudeste" => 0.10m,
+                _ => 0m
+            };
+        }
+
+        public static int GetDeliveryTime(string region, string locality)
+        {
+            if (locality == "São Paulo" && region == "Sudeste")
+            {
+                return 0;
+            }
+
+            return region switch
+            {
+                "Norte" or "Nordeste" => 10,
+                "Centro-Oeste" or "Sul" => 5,
+                "Sudeste" => 1,
+                _ => 0
             };
         }
     }
+
 }

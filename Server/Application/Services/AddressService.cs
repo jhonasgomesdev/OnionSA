@@ -7,7 +7,7 @@ namespace Server.Application.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly string URL = "viacep.com.br/ws/";
+        private readonly string URL = "https://viacep.com.br/ws/";
         private readonly HttpClient _httpClient;
         public AddressService(HttpClient httpClient)
         {

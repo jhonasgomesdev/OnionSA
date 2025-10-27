@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Application.DTOs;
 using Server.Application.Interfaces;
 using Server.Infrastructure.Interfaces;
+using Server.Application.Utils;
 
 namespace Server.Application.Services
 {
@@ -42,18 +43,24 @@ namespace Server.Application.Services
             return orderSales;
         }
 
-        private async Task<SaleOrderDto> GetProductContent(SpreadsheetRowDto order, decimal price)
+        private async Task<SaleOrderDto> GetProductContent(SpreadsheetRowDto order, decimal productPrice)
         {
             var adress = await _addressService.GetAddress(order.CEP);
-            var region = await _addressService.GetRegion(order.CEP);
+            var region = adress.Regiao;
+            var deliveryCost = RegionProcessor.GetDeliveryCost(region, adress.Locality);
+            var deliveryTime = RegionProcessor.GetDeliveryTime(region, adress.Locality);
+
+            var totalPrice = productPrice + (productPrice * deliveryCost);
+
+            var deliveryDate = DateOnly.FromDateTime(order.Date).AddDays(deliveryTime);
 
             return new SaleOrderDto
             {
                 ClientName = order.CorporateReason,
                 ProductName = order.ProductName,
-                Price = price,
-                DeliveryDate = await _addressService.GetDeliveryDate(order.CEP),
-                Region = await _addressService.GetRegion(order.CEP)
+                Price = totalPrice,
+                DeliveryDate = deliveryDate,
+                Region = region
             };
         }
     }

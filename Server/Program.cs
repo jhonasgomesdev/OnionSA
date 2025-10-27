@@ -24,9 +24,10 @@ builder.Services.AddScoped<IAppDbContext>(provider =>
 
 builder.Services.AddAutoMapper(typeof(SpreadsheetMappingProfile));
 
+builder.Services.AddHttpClient<IAddressService, AddressService>();
+
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ISaleOrderService, SaleOrderService>();
 builder.Services.AddScoped<ISpreadsheetService, SpreadsheetService>();

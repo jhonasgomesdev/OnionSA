@@ -19,7 +19,6 @@ export default function UploadCard({ onUpload, isUploading = false }: UploadCard
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Validação de tipo de arquivo
   const isValidFileType = (file: File): boolean => {
     const allowedTypes = ['.xlsx', '.xls'];
     const fileExtension = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
@@ -42,7 +41,6 @@ export default function UploadCard({ onUpload, isUploading = false }: UploadCard
     }
   };
 
-  // Drag & Drop handlers
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
@@ -84,8 +82,8 @@ export default function UploadCard({ onUpload, isUploading = false }: UploadCard
       setMessage("");
 
       let result;
+
       if (onUpload) {
-        // Usa a função passada por prop se existir
         result = await onUpload(file);
       } else {
         // Fallback para a implementação original
@@ -101,7 +99,6 @@ export default function UploadCard({ onUpload, isUploading = false }: UploadCard
       setStatus("success");
       setMessage(result?.message || "Planilha enviada com sucesso!");
       
-      // Reset mais eficiente
       setFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -119,7 +116,6 @@ export default function UploadCard({ onUpload, isUploading = false }: UploadCard
     }
   };
 
-  // Determina se o botão deve estar desabilitado
   const isButtonDisabled = status === "uploading" || isUploading;
 
   return (
@@ -180,7 +176,7 @@ export default function UploadCard({ onUpload, isUploading = false }: UploadCard
       {file && (
         <button
           onClick={(e) => {
-            e.stopPropagation(); // Previne que o clique no botão dispare o file input
+            e.stopPropagation();
             handleUpload();
           }}
           disabled={isButtonDisabled}

@@ -2,6 +2,7 @@
 {
     public class SaleOrderDto
     {
+        public string Document { get; set; }
         public string ClientName { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }

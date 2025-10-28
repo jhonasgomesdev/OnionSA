@@ -53,8 +53,6 @@ namespace Server.Application.Services
 
                 await _lastSpreadSheetService.RegisterLastSpreadsheet(cleanedValidRows);
 
-                Teste();
-
                 await RegisterData(validRows);
 
                 return result;
@@ -94,6 +92,7 @@ namespace Server.Application.Services
 
             return result;
         }
+
         private async Task RegisterData(IEnumerable<SpreadsheetRowDto> validRows)
         {
             foreach (var row in validRows)
@@ -108,6 +107,7 @@ namespace Server.Application.Services
                 }
             }
         }
+
         private IEnumerable<SpreadsheetRowDto> ClearDataRows(IEnumerable<SpreadsheetRowDto> rows)
         {
             foreach (var row in rows)
@@ -119,19 +119,10 @@ namespace Server.Application.Services
             }
             return rows;
         }
+
         private bool IsRowEmpty(SpreadsheetRowDto row)
         {
             return string.IsNullOrWhiteSpace(row.Document);
-        }
-
-        private void Teste()
-        {
-            var lastSpreadsheets = _dbContext.LastSpreadsheets.AsNoTracking().ToList();
-
-            foreach (var item in lastSpreadsheets)
-            {
-                Console.WriteLine($"ID: {item.Id}, Document: {item.Document}, CorporateReason: {item.CorporateReason}, CEP: {item.CEP}, ProductName: {item.ProductName}, OrderNumber: {item.OrderNumber}, Date: {item.Date}");
-            }
         }
     }
 }

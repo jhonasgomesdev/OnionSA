@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Application.DTOs;
 using Server.Application.Interfaces;
-using Server.Infrastructure.Interfaces;
 using Server.Application.Utils;
+using Server.Domain.DTOs;
+using Server.Infrastructure.Interfaces;
+using System.Runtime.ConstrainedExecution;
 
 namespace Server.Application.Services
 {
@@ -13,12 +15,14 @@ namespace Server.Application.Services
         private readonly IProductService _productService;
         private readonly IAppDbContext _dbContext;
         private readonly IMapper _mapper;
-        public SaleOrderService(IAddressService addressService, IProductService productService, IAppDbContext dbContext, IMapper mapper)
+        private readonly ILogger<SaleOrderService> _logger;
+        public SaleOrderService(IAddressService addressService, IProductService productService, IAppDbContext dbContext, IMapper mapper, ILogger<SaleOrderService> logger)
         {
             _addressService = addressService;
             _productService = productService;
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<List<SaleOrderDto>> GetSaleOrder()
@@ -29,13 +33,16 @@ namespace Server.Application.Services
                 throw new Exception("Erro ao obter lista de vendas.");
 
             var orderSales = new List<SaleOrderDto>();
-            
+            var addresses = new List<AddressDto>();
+
             foreach (var order in lastSpreadsheet)
             {
                 var orderMap = _mapper.Map<SpreadsheetRowDto>(order);
                 var product = await _productService.FindProduct(orderMap);
 
                 var productContent = await GetProductContent(orderMap, product.Price);
+
+                if (productContent == null) continue;
 
                 orderSales.Add(productContent);
             }
@@ -45,23 +52,35 @@ namespace Server.Application.Services
 
         private async Task<SaleOrderDto> GetProductContent(SpreadsheetRowDto order, decimal productPrice)
         {
-            var adress = await _addressService.GetAddress(order.CEP);
-            var region = adress.Regiao;
-            var deliveryCost = RegionProcessor.GetDeliveryCost(region, adress.Locality);
-            var deliveryTime = RegionProcessor.GetDeliveryTime(region, adress.Locality);
-
-            var totalPrice = productPrice + (productPrice * deliveryCost);
-
-            var deliveryDate = DateOnly.FromDateTime(order.Date).AddDays(deliveryTime);
-
-            return new SaleOrderDto
+            try 
             {
-                ClientName = order.CorporateReason,
-                ProductName = order.ProductName,
-                Price = totalPrice,
-                DeliveryDate = deliveryDate,
-                Region = region
-            };
+                var address = await _addressService.GetAddress(order.CEP);
+                
+                if (address.UF == null) return null;
+                
+                var region = address.Regiao;
+                var deliveryCost = RegionProcessor.GetDeliveryCost(region, address.Locality);
+                var deliveryTime = RegionProcessor.GetDeliveryTime(region, address.Locality);
+
+                var totalPrice = productPrice + (productPrice * deliveryCost);
+
+                var deliveryDate = DateOnly.FromDateTime(order.Date).AddDays(deliveryTime);
+
+                return new SaleOrderDto
+                {
+                    Document = order.Document,
+                    ClientName = order.CorporateReason,
+                    ProductName = order.ProductName,
+                    Price = totalPrice,
+                    DeliveryDate = deliveryDate,
+                    Region = region
+                };
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao consumir api ViaCep");
+                return null;
+            }
         }
     }
 }

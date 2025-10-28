@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Server.Domain.Entities
+namespace Server.Domain.DTOs
 {
-    public class Address
+    public class AddressDto
     {
         [JsonPropertyName("cep")]
         public string CEP { get; set; }
@@ -43,4 +43,5 @@ namespace Server.Domain.Entities
         [JsonPropertyName("siafi")]
         public string SIAFI { get; set; }
     }
+    
 }

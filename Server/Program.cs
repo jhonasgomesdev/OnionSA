@@ -14,7 +14,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuração CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -39,6 +38,7 @@ builder.Services.AddAutoMapper(typeof(SpreadsheetMappingProfile));
 
 builder.Services.AddHttpClient<IAddressService, AddressService>();
 
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -70,7 +70,7 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.CanConnect();
     dbContext.Database.EnsureCreated();
-    DbInitializer.Seed(dbContext); // Inicializa com dados
+    DbInitializer.Seed(dbContext);
 }
 
 app.Run();

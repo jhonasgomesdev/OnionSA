@@ -1,9 +1,9 @@
-﻿using Server.Domain.Entities;
+﻿using Server.Domain.DTOs;
 
 namespace Server.Application.Interfaces
 {
     public interface IAddressService
     {
-        Task<Address> GetAddress(string cep);
+        Task<AddressDto?> GetAddress(string cep);
     }
 }

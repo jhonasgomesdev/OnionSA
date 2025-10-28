@@ -14,7 +14,6 @@ interface UploadResultModalProps {
   result: UploadResult | null;
 }
 
-// Função para formatar mensagens de erro de forma amigável
 function formatErrorMessage(error: string): string {
   const errorMappings: { [key: string]: string } = {
     "Razão social é obrigatório.": "Razão social é obrigatória",
@@ -27,11 +26,9 @@ function formatErrorMessage(error: string): string {
   return errorMappings[error] || error;
 }
 
-// Componente para exibir uma linha com erro de forma expansível
 function ErrorRowWithControl({ errorData, forceExpanded }: { errorData: any, forceExpanded: boolean }) {
   const [isExpanded, setIsExpanded] = useState(forceExpanded);
 
-  // Atualiza o estado interno quando forceExpanded muda
   useState(() => {
     setIsExpanded(forceExpanded);
   });
@@ -155,7 +152,6 @@ export function UploadResultModal({ isOpen, onClose, result }: UploadResultModal
 
   const hasErrors = result.invalidCount > 0;
 
-  // Função para expandir/comprimir todas as linhas
   const toggleAllRows = () => {
     setAllExpanded(!allExpanded);
   };

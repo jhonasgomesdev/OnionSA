@@ -56,7 +56,7 @@ namespace Server.Application.Services
             {
                 var address = await _addressService.GetAddress(order.CEP);
                 
-                if (address.UF == null) return null;
+                if (address == null || address.UF == null) return null;
                 
                 var region = address.Regiao;
                 var deliveryCost = RegionProcessor.GetDeliveryCost(region, address.Locality);

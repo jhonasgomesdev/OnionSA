@@ -5,7 +5,7 @@ O projeto foi criado para otimizar o **controle, manutenção das vendas e logí
 
 ---
 
-## 🧩 Funcionalidades
+## Funcionalidades
 
 - **Importação de Planilhas:** permite importar planilhas de pedidos no formato XLSX usando o MiniExcel.  
 - **Visualização de Gráficos:** exibe gráficos dinâmicos de vendas por região e por produto com amCharts 5.  
@@ -14,7 +14,7 @@ O projeto foi criado para otimizar o **controle, manutenção das vendas e logí
 
 ---
 
-## 🧠 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 ### **Backend**
 - [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
@@ -37,7 +37,7 @@ O projeto foi criado para otimizar o **controle, manutenção das vendas e logí
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## Como Executar o Projeto
 
 ### **Backend**
 1. Certifique-se de ter o **.NET 8 SDK** instalado.  
